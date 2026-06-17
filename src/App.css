@@ -66,6 +66,28 @@ body {
   background: #5a5a9c;
 }
 
+.controls__btn--danger {
+  border-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+.controls__btn--danger:hover {
+  background: #7f1d1d;
+  border-color: #ef4444;
+  color: #fff;
+}
+
+.controls__btn--reconnect {
+  border-color: #1d7f4a;
+  color: #86efac;
+}
+
+.controls__btn--reconnect:hover {
+  background: #1d7f4a;
+  border-color: #22c55e;
+  color: #fff;
+}
+
 .controls__filter {
   display: flex;
   gap: 0.5rem;
@@ -97,6 +119,10 @@ body {
 
 .status--disconnected {
   color: #f87171;
+}
+
+.status--ended {
+  color: #fbbf24;
 }
 
 .grid {
