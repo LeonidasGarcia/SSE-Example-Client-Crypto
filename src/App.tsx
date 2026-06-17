@@ -21,7 +21,7 @@ export default function App() {
   const handleMessage = useCallback((raw: string) => {
     try {
       const data: Price[] = JSON.parse(raw);
-      setPrices(prev => {
+      setPrices((prev) => {
         const next = { ...prev };
         for (const p of data) next[p.symbol] = p;
         return next;
@@ -33,7 +33,6 @@ export default function App() {
 
   useEffect(() => {
     setStatus('disconnected');
-    const ctrl = new AbortController();
 
     if (mode === 'native' || mode === 'manual') {
       const url = mode === 'manual' ? SSE_MANUAL_URL : SSE_URL;
@@ -47,14 +46,20 @@ export default function App() {
       return () => es.close();
     }
 
+    const ctrl = new AbortController();
+
     fetchEventSource(SSE_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ symbols: selected }),
       signal: ctrl.signal,
-      onopen: async () => { setStatus('connected'); },
+      onopen: async () => {
+        setStatus('connected');
+      },
       onmessage: (e) => handleMessage(e.data),
-      onclose: () => { setStatus('ended'); },
+      onclose: () => {
+        setStatus('ended');
+      },
       onerror() {
         setStatus('ended');
       },
@@ -73,15 +78,15 @@ export default function App() {
   };
 
   const toggleSymbol = (sym: string) => {
-    setSelected(prev =>
-      prev.includes(sym) ? prev.filter(s => s !== sym) : [...prev, sym],
+    setSelected((prev) =>
+      prev.includes(sym) ? prev.filter((s) => s !== sym) : [...prev, sym],
     );
   };
 
   const reconnect = () => {
     setPrices({});
     setStatus('disconnected');
-    setReconnectKey(k => k + 1);
+    setReconnectKey((k) => k + 1);
   };
 
   const statusLabel =
@@ -127,7 +132,7 @@ export default function App() {
       {mode === 'fetch' && (
         <div className="controls">
           <div className="controls__filter">
-            {ALL_SYMBOLS.map(sym => (
+            {ALL_SYMBOLS.map((sym) => (
               <label key={sym}>
                 <input
                   type="checkbox"
@@ -142,7 +147,10 @@ export default function App() {
       )}
 
       <div className="controls">
-        <button className="controls__btn controls__btn--danger" onClick={stopStreams}>
+        <button
+          className="controls__btn controls__btn--danger"
+          onClick={stopStreams}
+        >
           Stop All Streams (POST /stop)
         </button>
       </div>
@@ -151,14 +159,17 @@ export default function App() {
 
       {status === 'ended' && (
         <div className="controls">
-          <button className="controls__btn controls__btn--reconnect" onClick={reconnect}>
+          <button
+            className="controls__btn controls__btn--reconnect"
+            onClick={reconnect}
+          >
             ↻ Reconnect
           </button>
         </div>
       )}
 
       <div className="grid">
-        {ALL_SYMBOLS.map(sym => {
+        {ALL_SYMBOLS.map((sym) => {
           const price = prices[sym];
           if (!price) {
             return (
